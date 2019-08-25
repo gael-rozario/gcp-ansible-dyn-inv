@@ -19,9 +19,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
-
+	"github.com/gael-rozario/gcp-ansible-dyn-inv/gcpansinv/hostvars"
+	listhosts "github.com/gael-rozario/gcp-ansible-dyn-inv/gcpansinv/list"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -34,7 +35,17 @@ var rootCmd = &cobra.Command{
 	Long:  `list ansible dynamic inventory from gcp cloud`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		listflag, _ := cmd.Flags().GetBool("list")
+		hostflag, _ := cmd.Flags().GetString("host")
+		if listflag {
+			listhosts.List()
+		} else {
+			if hostflag != "" {
+				hostvars.Hostvars(hostflag)
+			}
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -59,6 +70,7 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolP("list", "l", false, "list all inventory")
+	rootCmd.Flags().StringP("host", "v", "", "list host variables")
 }
 
 // initConfig reads in config file and ENV variables if set.
