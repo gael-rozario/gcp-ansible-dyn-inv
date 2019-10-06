@@ -16,7 +16,7 @@ func GetGcpAnsibleMap(project string) Hostgrouplist {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, instance := range instancedata.Items {
+	for _, instance := range instancedata {
 		if hostgroup, ok := instance.Labels["ansible_host"]; ok {
 			iplist := ansiblejsondata[hostgroup]
 			for _, netinter := range instance.NetworkInterfaces {
